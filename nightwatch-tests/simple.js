@@ -88,7 +88,7 @@ module.exports = {
     client.end();
   },
 
-  'Open and Close Msg should open and the Picker' : function (client) {
+  'Open and Close Msg should open and close the Picker' : function (client) {
     client.url(url);
     client.expect.element(openBtn).to.be.present.before(defaultWait);
     client.click(openBtn);
@@ -101,6 +101,16 @@ module.exports = {
     client.expect.element(textInputSelector).value.to.equal("1969/06/29").before(defaultWait);
     client.expect.element(errorMsgSelector).to.not.be.present.before(defaultWait);
     client.end();
+  },
+
+  'Hitting Escape key when the Picker is opened should close the Picker' : function (client) {
+    client.url(url);
+    client.expect.element(textInputSelector).to.be.present.before(defaultWait);
+    client.click(textInputSelector);
+    client.expect.element(topLeftDaySelector).to.be.present.before(defaultWait);
+    client.sendKeys(textInputSelector, client.Keys.ESCAPE);
+    client.expect.element(topLeftDaySelector).to.not.be.present.before(defaultWait);
+    client.end();   
   },
 
 

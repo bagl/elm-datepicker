@@ -42,6 +42,7 @@ type Msg
     | Blur
     | MouseDown
     | MouseUp
+    | KeyUp Int
 
 
 {-| The type of date picker settings.
@@ -395,6 +396,12 @@ update settings msg (DatePicker ({ forceOpen, focused } as model)) =
         MouseUp ->
             ( DatePicker { model | forceOpen = False }, Cmd.none, None )
 
+        KeyUp keyCode ->
+            if keyCode == 27 then -- Escape
+                ( DatePicker { model | open = forceOpen }, Cmd.none, None )
+            else
+                (DatePicker model, Cmd.none, None)
+
 
 {-| Generate a message that will act as if the user has chosen a certain date,
 so you can call `update` on the model yourself.
@@ -461,6 +468,7 @@ view pickedDate settings (DatePicker (model as datepicker)) =
                  , Attrs.name (settings.inputName |> Maybe.withDefault "")
                  , type_ "text"
                  , on "change" (Json.succeed SubmitText)
+                 , on "keyup" (Json.map KeyUp Html.Events.keyCode)
                  , onInput Text
                  , onBlur Blur
                  , onClick Focus
